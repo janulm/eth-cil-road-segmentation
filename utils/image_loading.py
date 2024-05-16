@@ -3,6 +3,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import os
 
+
 # Utility function that takes a set of png images and converts them to arrays of RGB values
 def load_images(image_folder):
     folder_path = os.path.join(os.path.dirname(__file__), image_folder)
@@ -20,17 +21,17 @@ def load_images(image_folder):
 
 # Load the training images as arrays of RGB values
 def load_training_images():
-    image_folder = 'data/training/images'
+    image_folder = '../data/training/images'
     return load_images(image_folder)
 
 # Load the groudtruth images as arrays of RGB values
 def load_groundtuth_images():
-    image_folder = 'data/training/groundtruth'
+    image_folder = '../data/training/groundtruth'
     return load_images(image_folder)
 
 # Load the test images as arrays of RGB values
 def load_test_images():
-    image_folder = 'data/test/images'
+    image_folder = '../data/test/images'
     return load_images(image_folder)
 
 # Print an image based on array of RGB values

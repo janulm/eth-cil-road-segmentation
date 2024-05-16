@@ -1,5 +1,6 @@
 # ignore the test and traning folder
 
+__pycache__/
 **/.DS_Store
 *.png
 # ignore the stored pytorch models
