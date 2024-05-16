@@ -3,6 +3,7 @@
 .DS_Store
 data/test/
 data/training/
+__pycache__/
 
 
 # ignore the stored pytorch models
