@@ -1,7 +1,19 @@
 # ETHZ Computational Intelligence Lab 2024 Road Segmentation Project
 
 
-## TODO:
+
+
+## TODO/Ideas:
+
+### Dataset: 
+
+Note: For evaluation on kaggle only the path wise (16x16 label is checked)
+Instead of pixle wise prediction we could try to predict for each of the 16x16 patches a binary street or not label. 
+This would reduce the amount of data we have to predict by a factor of 256. And maybe makes it easier for the model to learn. 
+
+Test approach using F1 score for evaluation or other metrics such as BCE, Dice.
+
+We are not evaluated on accuracy but on the F1 score. (better measure for unbalanced datasets)
 
 ### SAM
 
@@ -24,13 +36,7 @@
 
 
 
-Note: For evaluation on kaggle only the path wise (16x16 label is checked)
-    If 
 
-Ideas: maybe not only work on the 400x400 images but only on the 16x16 image patches, 
-Think about data balancing since there are much more non-road pixels than road pixels./ patches
-
-We are not evaluated on accuracy but on the F1 score. (better measure for unbalanced datasets)
 
 
 

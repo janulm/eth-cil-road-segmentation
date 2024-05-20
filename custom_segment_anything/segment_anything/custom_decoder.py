@@ -40,11 +40,11 @@ class Conv_Decoder(nn.Module):
         self._l_norm2 = LayerNorm2d(64)
         self._l_norm3 = LayerNorm2d(32)
         self._l_norm4 = LayerNorm2d(16)
-        self._conv1 = nn.Conv2d(256, 128, kernel_size=2,stride=2, padding=0)
-        self._conv2 = nn.Conv2d(128, 64, kernel_size=2,stride=2, padding=0)
-        self._conv3 = nn.Conv2d(64, 32, kernel_size=2,stride=2, padding=0)
-        self._conv4 = nn.Conv2d(32, 16, kernel_size=2,stride=2, padding=0)
-        self._conv5 = nn.Conv2d(16, 1, kernel_size=1,stride=1, padding=0)
+        self._conv1 = nn.ConvTranspose2d(256, 128, kernel_size=2,stride=2, padding=0)
+        self._conv2 = nn.ConvTranspose2d(128, 64, kernel_size=2,stride=2, padding=0)
+        self._conv3 = nn.ConvTranspose2d(64, 32, kernel_size=2,stride=2, padding=0)
+        self._conv4 = nn.ConvTranspose2d(32, 16, kernel_size=2,stride=2, padding=0)
+        self._conv5 = nn.ConvTranspose2d(16, 1, kernel_size=1,stride=1, padding=0)
 
         self.decoder = nn.Sequential(
             self._conv1,
@@ -61,8 +61,9 @@ class Conv_Decoder(nn.Module):
             self._conv4,
             self._l_norm4,
             nn.ReLU(),
-            self._conv5,
-            nn.Sigmoid()
+            self._conv5
+            #, removed for numerical stability reasons 
+            #nn.Sigmoid()
         )
 
     def forward(self, x):

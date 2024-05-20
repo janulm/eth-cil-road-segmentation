@@ -9,7 +9,11 @@ def load_images(image_folder):
     folder_path = os.path.join(os.path.dirname(__file__), image_folder)
     image_arrays = []
 
-    for file_name in os.listdir(folder_path):
+    images_names = os.listdir(folder_path)
+    # sort them
+    images_names.sort()
+
+    for file_name in images_names:
         if file_name.endswith('.png'):
             path = os.path.join(folder_path, file_name)
             im_frame = Image.open(path)
