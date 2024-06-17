@@ -5,3 +5,5 @@ __pycache__/
 *.png
 # ignore the stored pytorch models
 *.pth
+
+raw/
