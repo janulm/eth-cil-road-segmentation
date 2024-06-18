@@ -6,4 +6,5 @@ __pycache__/
 # ignore the stored pytorch models
 *.pth
 
+
 raw/
