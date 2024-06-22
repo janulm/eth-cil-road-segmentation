@@ -1,3 +1,0 @@
-[submodule "data/gmaps/--help"]
-	path = data/gmaps/roadtracer
-	url = git@github.com:mitroadmaps/roadtracer.git
