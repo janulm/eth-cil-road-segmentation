@@ -20,7 +20,6 @@ class LayerNorm2d(nn.Module):
     
 
 
-
 """
 We test different versions of decoders: 
 
@@ -29,8 +28,6 @@ Size of output of image encoder is 256x64x64
 Excecpted output of the decoder is 1024x1024x3
 
 """
-
-
 class Conv_Decoder(nn.Module):
     def __init__(self, p_dropout = 0.2):
         super().__init__()
@@ -71,13 +68,12 @@ class Conv_Decoder(nn.Module):
     
 
 
-class EncoderSAM_CustomDecoder(nn.Module):
+class SAM_Encoder_Custom_Decoder(nn.Module):
     def __init__(self, sam_preprocess, sam_encoder, decoder, encoder_finetune_num_last_layers=5):
         super().__init__()
         self.sam_preprocess = sam_preprocess
         self.sam_encoder = sam_encoder
-        num_layers_sam_encoder = 176
-
+    
         last_layer_numb = 0
         for layer_number, param in enumerate(self.sam_encoder.parameters()):
             param.requires_grad = False
@@ -91,8 +87,6 @@ class EncoderSAM_CustomDecoder(nn.Module):
         
         # Unfreeze neck of the encoder
         self.sam_encoder.neck.requires_grad = True
-
-
         self.decoder = decoder
 
     def forward(self, x):
