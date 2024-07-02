@@ -72,3 +72,13 @@ def get_street_ratio_mmm(mask_list):
         r_mean += ratio
     r_mean = r_mean / len(mask_list)
     return r_min, r_mean, r_max
+
+def get_street_ratio_distr(mask_list):
+    # expects a list of gt masks:
+    # returns ratio of how much of the mask is street
+    # returns min, mean and max ratio. 
+    ratios = []
+    for mask in mask_list:
+        ratio = mask.mean() / 255.
+        ratios.append(ratio)
+    return ratios
