@@ -11,8 +11,8 @@ import torchvision.transforms.functional as TF
 
 
 '''
-DATASET CLASS FOR Custom Decoder SAM
 
+Dataset Class that transforms all the images to the format required by sam preprocess
 
 '''
 
@@ -21,8 +21,8 @@ from torchvision import transforms
 import torchvision.transforms.functional as TF
 
 class CustomTransform:
-    def __init__(self):
-        pass
+    def __init__(self,img_size=1024):
+        self.img_size = img_size
 
     def __call__(self, image, mask):
         # Convert to tensor and set dtype
@@ -40,18 +40,31 @@ class CustomTransform:
             mask = TF.vflip(mask)
         
         # Resize both image and mask
-        image = TF.resize(image, (1024, 1024), interpolation=transforms.InterpolationMode.NEAREST)
-        mask = TF.resize(mask, (1024, 1024), interpolation=transforms.InterpolationMode.NEAREST)
+        image = TF.resize(image, (self.img_size, self.img_size), interpolation=transforms.InterpolationMode.NEAREST)
+        mask = TF.resize(mask, (self.img_size, self.img_size), interpolation=transforms.InterpolationMode.NEAREST)
         
         return image, mask
 
 
-class sam_dataset(Dataset):
-    def __init__(self, satellite_images, street_masks):
-        self.satellite_images = satellite_images
-        self.street_masks = street_masks
+class Sat_Mask_Dataset(Dataset):
+    def __init__(self, satellite_images, street_masks,min_street_ratio=0.0,max_street_ratio=1.0):
+        # filters out all images and their corresponding mask that are outside of the range of this dataset. 
+        assert len(satellite_images) == len(street_masks), "Number of images and masks should be the same"
+        self.satellite_images = []
+        self.street_masks = []
+        count_discard = 0
+        for i in range(len(satellite_images)):
+            # compute ratio
+            # check if in bounds, then append. 
+            ratio = street_masks[i].mean() / 255.
+            if (ratio >= min_street_ratio and ratio <= max_street_ratio):
+                self.satellite_images.append(satellite_images[i])
+                self.street_masks.append(street_masks[i])
+            else: 
+                count_discard += 1
+        print("Initialzed dataset, checked for min,max street ratio. Discarded %:",count_discard/len(street_masks)," num discarded:",count_discard)
         assert len(self.satellite_images) == len(self.street_masks), "Number of images and masks should be the same"
-        self.transform = CustomTransform()
+        self.transform = CustomTransform(img_size=1024)
         
     def __len__(self):
         return len(self.satellite_images)
