@@ -6,6 +6,8 @@ __pycache__/
 # ignore the stored pytorch models
 *.pth
 
+*.png:Zone.Identifier
+*:Zone.Identifier
 *.Identifier
 raw/
 cache/
