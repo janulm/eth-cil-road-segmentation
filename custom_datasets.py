@@ -30,14 +30,14 @@ class CustomTransform:
         mask = TF.to_tensor(mask).float()
 
         # Apply random horizontal flip to both image and mask
-        if torch.rand(1) < 0.5:
-            image = TF.hflip(image)
-            mask = TF.hflip(mask)
+        #if torch.rand(1) < 0.5:
+        #    image = TF.hflip(image)
+        #    mask = TF.hflip(mask)
 
         # Apply random vertical flip to both image and mask
-        if torch.rand(1) < 0.5:
-            image = TF.vflip(image)
-            mask = TF.vflip(mask)
+        #if torch.rand(1) < 0.5:
+        #    image = TF.vflip(image)
+        #    mask = TF.vflip(mask)
         
         # Resize both image and mask
         image = TF.resize(image, (self.img_size, self.img_size), interpolation=transforms.InterpolationMode.NEAREST)
@@ -70,9 +70,10 @@ class Sat_Mask_Dataset(Dataset):
         return len(self.satellite_images)
 
     def __getitem__(self, idx):
-        image = self.satellite_images[idx]
+        image = self.satellite_images[idx] # scale 
         mask = self.street_masks[idx] / 255  # normalize mask
 
         image, mask = self.transform(image, mask)
-                
+        image = image * 255. 
+        mask = mask[0].unsqueeze(0) 
         return image, mask
