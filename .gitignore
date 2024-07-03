@@ -6,6 +6,6 @@ __pycache__/
 # ignore the stored pytorch models
 *.pth
 
-
+*.Identifier
 raw/
 cache/
