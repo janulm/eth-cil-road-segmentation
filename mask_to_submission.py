@@ -67,5 +67,10 @@ def main(_):
     image_filenames = [os.path.join(FLAGS.base_dir, name) for name in os.listdir(FLAGS.base_dir)]
     masks_to_submission(FLAGS.submission_filename, "", *image_filenames)
 
+def make_submission(submission_filename, base_dir):
+    image_filenames = [os.path.join(base_dir, name) for name in os.listdir(base_dir)]
+    masks_to_submission(submission_filename, "", *image_filenames)
+
+
 if __name__ == '__main__':
     app.run(main)
