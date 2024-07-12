@@ -134,6 +134,7 @@ class MLP_Decoder(nn.Module):
         x = torch.swapaxes(x, 2, 3)
         # we want shape of x to be (batch_size, 1, 1024, 1024)
         x = x.reshape(batch_size, 1, 1024, 1024)
+        #x = torch.swapaxes(x, 2, 3)
         return x
     
 class SAM_Encoder_Custom_Decoder(nn.Module):
