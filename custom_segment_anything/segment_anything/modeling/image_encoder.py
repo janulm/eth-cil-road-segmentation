@@ -128,7 +128,7 @@ class ImageEncoderViT(nn.Module):
         #
 
         if self.return_intermediate_layers:
-            intermediate_layers_output = torch.empty((x.shape[0], x.shape[1], x.shape[2], x.shape[3], 3),device=x.device,requires_grad=True)
+            intermediate_layers_output = torch.empty((x.shape[0], x.shape[1], x.shape[2], x.shape[3], 3),device=x.device,requires_grad=False)
 
         append_counter = 0
         for i, blk in enumerate(self.blocks):

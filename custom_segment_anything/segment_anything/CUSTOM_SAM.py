@@ -263,7 +263,7 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
 
         # ADD the spatially aware part:
         if self.context_option == 1:
-            x_new = torch.zeros((batch_size, 64, 64, 256,9), device=x.device, requires_grad=True)
+            x_new = torch.zeros((batch_size, 64, 64, 256,9), device=x.device, requires_grad=False)
             x_new[:, :, :, :, 0] = x
             x_new[:, 1:, :, :, 1] = x[:, :-1, :, :]
             x_new[:, :-1, :, :, 2] = x[:, 1:, :, :]
@@ -276,7 +276,7 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
             x = x_new
             x = x.reshape(batch_size, 64, 64, 256 * 9)
         elif self.context_option == 0:
-            x_new = torch.zeros((batch_size, 64, 64, 256,5), device=x.device, requires_grad=True)
+            x_new = torch.zeros((batch_size, 64, 64, 256,5), device=x.device, requires_grad=False)
             x_new[:, :, :, :, 0] = x
             x_new[:, 1:, :, :, 1] = x[:, :-1, :, :]
             x_new[:, :-1, :, :, 2] = x[:, 1:, :, :]
