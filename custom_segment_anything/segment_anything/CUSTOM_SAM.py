@@ -67,7 +67,76 @@ class Conv_Decoder(nn.Module):
         return self.decoder(x)
     
 
+class MLP_Decoder(nn.Module):
 
+    # the input shape is: 
+
+    # ([1, 256, 64, 64])
+
+
+    # 1024 / 16 = 64
+    # hence each of the 16x16 patches is now represented as a 256 dimensional vector, 
+    # there are 64x64 of these patches: 
+
+
+    def __init__(self, p_dropout = 0.2):
+        super().__init__()
+        # fill in here: 
+        self.flatten = nn.Flatten(start_dim=2)
+        self.dropout1 = nn.Dropout(p=p_dropout)
+        self.dropout2 = nn.Dropout(p=p_dropout)
+        self.dropout3 = nn.Dropout(p=p_dropout)
+        self.dropout4 = nn.Dropout(p=p_dropout)
+        self.dropout5 = nn.Dropout(p=p_dropout)
+
+        self.fc1 = nn.Linear(256, 512)
+        self.fc2 = nn.Linear(512, 512)
+        self.fc3 = nn.Linear(512, 512)
+        self.fc4 = nn.Linear(512, 256)
+        self.fc5 = nn.Linear(256, 256)
+        self.fc6 = nn.Linear(256, 256)
+
+        self.gelu = nn.LeakyReLU()
+
+
+    def forward(self, x):
+        # input is of shape: dim_0 = batch_size,  ([1, 256, 64, 64])
+        batch_size = x.shape[0]
+        
+        x = torch.swapaxes(x, 1, 2)
+        x = torch.swapaxes(x, 2, 3)
+        # x is now of shape: (1,64,64,256)
+        # we want to apply a linear layer to each of the 4096 patches
+
+        x = self.fc1(x)
+        x = self.gelu(x)
+        x = self.dropout1(x)
+
+        x = self.fc2(x)
+        x = self.gelu(x)
+        x = self.dropout2(x)
+
+        x = self.fc3(x)
+        x = self.gelu(x)
+        x = self.dropout3(x)
+
+        x = self.fc4(x)
+        x = self.gelu(x)
+        x = self.dropout4(x)
+
+        x = self.fc5(x)
+        x = self.gelu(x)
+        x = self.dropout5(x)
+
+        x = self.fc6(x)
+
+        x = x.reshape(batch_size, 64, 64, 16, 16)
+        x = torch.swapaxes(x, 2, 3)
+        # we want shape of x to be (batch_size, 1, 1024, 1024)
+        x = x.reshape(batch_size, 1, 1024, 1024)
+        #x = torch.swapaxes(x, 2, 3)
+        return x
+    
 class SAM_Encoder_Custom_Decoder(nn.Module):
     def __init__(self, sam_preprocess, sam_encoder, decoder, encoder_finetune_num_last_layers=5):
         super().__init__()
