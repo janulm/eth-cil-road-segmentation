@@ -33,6 +33,7 @@ class ImageEncoderViT(nn.Module):
         rel_pos_zero_init: bool = True,
         window_size: int = 0,
         global_attn_indexes: Tuple[int, ...] = (),
+        return_intermediate_layers=False,
     ) -> None:
         """
         Args:
@@ -51,6 +52,11 @@ class ImageEncoderViT(nn.Module):
             rel_pos_zero_init (bool): If True, zero initialize relative positional parameters.
             window_size (int): Window size for window attention blocks.
             global_attn_indexes (list): Indexes for blocks using global attention.
+
+            ### 
+            ADDED CUSTOM CODE: 
+            return_intermediate_layers (bool): Tells if global attn indexes intermediate outputs should be returned by the image encoder.
+            ###
         """
         super().__init__()
         self.img_size = img_size
@@ -102,18 +108,44 @@ class ImageEncoderViT(nn.Module):
             ),
             LayerNorm2d(out_chans),
         )
+        ########### ADDED CUSTOM CODE:
+        self.return_intermediate_layers = return_intermediate_layers
+        self.global_attn_indexes = global_attn_indexes
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        
+        ############### custom vision transformer code
+        
         x = self.patch_embed(x)
         if self.pos_embed is not None:
             x = x + self.pos_embed
 
-        for blk in self.blocks:
+        # x now is of shape (B, 64, 64, 768)
+        #
+        # this code contains the hardcoded version of the transformer blocks to either return the final output 
+        # or the final output and intermediate layers output after the global attention blocks i.e. blocks, 2,5,8, 
+        # output of the 11th block is ommitted since this is the final block and the output of the final block is returned anyway.
+        #
+
+        if self.return_intermediate_layers:
+            intermediate_layers_output = torch.empty((x.shape[0], x.shape[1], x.shape[2], x.shape[3], 3),device=x.device,requires_grad=True)
+
+        append_counter = 0
+        for i, blk in enumerate(self.blocks):
             x = blk(x)
-
-        x = self.neck(x.permute(0, 3, 1, 2))
-
-        return x
+            if self.return_intermediate_layers and i in [2,5,8]:
+                intermediate_layers_output[:, :, :, :, append_counter] = x
+                append_counter += 1
+        
+        if self.return_intermediate_layers:
+            # return the final prediction and the output of the intermediate layers
+            x = self.neck(x.permute(0, 3, 1, 2))
+            return x, intermediate_layers_output
+            
+        else:
+            # return the final output after all transformer blocks
+            x = self.neck(x.permute(0, 3, 1, 2))
+            return x
 
 
 class Block(nn.Module):

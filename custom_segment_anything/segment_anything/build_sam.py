@@ -41,6 +41,17 @@ def build_sam_vit_b(checkpoint=None):
         encoder_num_heads=12,
         encoder_global_attn_indexes=[2, 5, 8, 11],
         checkpoint=checkpoint,
+        return_intermediate_layers=False
+    )
+
+def build_sam_vit_b_intermediate_return(checkpoint=None):
+    return _build_sam(
+        encoder_embed_dim=768,
+        encoder_depth=12,
+        encoder_num_heads=12,
+        encoder_global_attn_indexes=[2, 5, 8, 11],
+        checkpoint=checkpoint,
+        return_intermediate_layers=True
     )
 
 
@@ -49,6 +60,7 @@ sam_model_registry = {
     "vit_h": build_sam_vit_h,
     "vit_l": build_sam_vit_l,
     "vit_b": build_sam_vit_b,
+    "vit_b_intermediate": build_sam_vit_b_intermediate_return,
 }
 
 
@@ -58,6 +70,7 @@ def _build_sam(
     encoder_num_heads,
     encoder_global_attn_indexes,
     checkpoint=None,
+    return_intermediate_layers=False
 ):
     prompt_embed_dim = 256
     image_size = 1024
@@ -77,6 +90,9 @@ def _build_sam(
             global_attn_indexes=encoder_global_attn_indexes,
             window_size=14,
             out_chans=prompt_embed_dim,
+            ### add this to add functionality to return the output intermediate layers between transformer blocks. 
+            return_intermediate_layers=return_intermediate_layers,
+            ##
         ),
         prompt_encoder=PromptEncoder(
             embed_dim=prompt_embed_dim,

@@ -82,7 +82,6 @@ class MLP_Decoder(nn.Module):
     def __init__(self, p_dropout = 0.2):
         super().__init__()
         # fill in here: 
-        self.flatten = nn.Flatten(start_dim=2)
         self.dropout1 = nn.Dropout(p=p_dropout)
         self.dropout2 = nn.Dropout(p=p_dropout)
         self.dropout3 = nn.Dropout(p=p_dropout)
@@ -140,6 +139,84 @@ class MLP_Decoder(nn.Module):
         return x
     
 
+class Skip_MLP_Decoder(nn.Module):
+
+    # the input shape is: 
+
+    # ([1, 256, 64, 64]), ... TODO HERE IS THE INTERMEDIATE OUTPUTS...
+
+
+    # 1024 / 16 = 64
+    # hence each of the 16x16 patches is now represented as a 256 dimensional vector, 
+    # there are 64x64 of these patches: 
+
+
+    def __init__(self, p_dropout = 0.2):
+        super().__init__()
+        # fill in here: 
+        self.dropout1 = nn.Dropout(p=p_dropout)
+        self.dropout2 = nn.Dropout(p=p_dropout)
+        self.dropout3 = nn.Dropout(p=p_dropout)
+        self.dropout4 = nn.Dropout(p=p_dropout)
+        self.dropout5 = nn.Dropout(p=p_dropout)
+
+        self.fc1 = nn.Linear(256*10, 512)
+        self.fc2 = nn.Linear(512, 512)
+        self.fc3 = nn.Linear(512, 512)
+        self.fc4 = nn.Linear(512, 256)
+        self.fc5 = nn.Linear(256, 256)
+        self.fc6 = nn.Linear(256, 256)
+
+        self.gelu = nn.LeakyReLU()
+
+
+    def forward(self, x):
+        # input is of shape: dim_0 = batch_size,  ([1, 256, 64, 64])
+        
+        #print("skip decoder here, received x input", x, x[0].shape, x[1].shape)
+        intermed = x[1]
+        x = x[0]
+
+        batch_size = x.shape[0]
+        # torch.Size([1, 256, 64, 64]) torch.Size([1, 64, 64, 768, 3])
+
+        x = torch.swapaxes(x, 1, 2)
+        x = torch.swapaxes(x, 2, 3)
+        # x is now of shape: (1,64,64,256)
+
+        # reshape the intermediate output:
+        intermed = intermed.reshape(batch_size, 64, 64, 768 * 3)
+        # concat the intermediate output to the final output x:
+        x = torch.cat((x, intermed), dim=3)
+        # x has to be now of shape: (1,64,64,256 * 10)
+        x = self.fc1(x)
+        x = self.gelu(x)
+        x = self.dropout1(x)
+
+        x = self.fc2(x)
+        x = self.gelu(x)
+        x = self.dropout2(x)
+
+        x = self.fc3(x)
+        x = self.gelu(x)
+        x = self.dropout3(x)
+
+        x = self.fc4(x)
+        x = self.gelu(x)
+        x = self.dropout4(x)
+
+        x = self.fc5(x)
+        x = self.gelu(x)
+        x = self.dropout5(x)
+
+        x = self.fc6(x)
+        # x is now of shape: (1,64,64,256)
+        x = x.reshape(batch_size, 64, 64, 16, 16)
+        x = torch.swapaxes(x, 2, 3)
+        # we want shape of x to be (batch_size, 1, 1024, 1024)
+        x = x.reshape(batch_size, 1, 1024, 1024)
+        #x = torch.swapaxes(x, 2, 3)
+        return x
 
 class MLP_Decoder_Spatially_Aware(nn.Module):
     # if option = 1, we use the 8 spatially aware patches, if option = 0 we use 4 spatially aware patches
@@ -154,7 +231,6 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
     def __init__(self, p_dropout = 0.2, context_option = 1):
         super().__init__()
         # fill in here: 
-        self.flatten = nn.Flatten(start_dim=2)
         self.dropout1 = nn.Dropout(p=p_dropout)
         self.dropout2 = nn.Dropout(p=p_dropout)
         self.dropout3 = nn.Dropout(p=p_dropout)
@@ -175,7 +251,7 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
         self.fc6 = nn.Linear(256, 256)
 
         self.gelu = nn.LeakyReLU()
-
+        self.context_option = context_option
 
     def forward(self, x):
         # input is of shape: dim_0 = batch_size,  ([1, 256, 64, 64])
@@ -186,7 +262,7 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
         # x is now of shape: (1,64,64,256)
 
         # ADD the spatially aware part:
-        if context_option == 1:
+        if self.context_option == 1:
             x_new = torch.zeros((batch_size, 64, 64, 256,9), device=x.device, requires_grad=True)
             x_new[:, :, :, :, 0] = x
             x_new[:, 1:, :, :, 1] = x[:, :-1, :, :]
@@ -199,7 +275,7 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
             x_new[:, :-1, 1:, :, 8] = x[:, 1:, :-1, :]
             x = x_new
             x = x.reshape(batch_size, 64, 64, 256 * 9)
-        elif context_option == 0:
+        elif self.context_option == 0:
             x_new = torch.zeros((batch_size, 64, 64, 256,5), device=x.device, requires_grad=True)
             x_new[:, :, :, :, 0] = x
             x_new[:, 1:, :, :, 1] = x[:, :-1, :, :]
