@@ -371,3 +371,5 @@ class EnsembleMLP(nn.Module):
         x = self.dropout2(x)
 
         x = self.fc3(x)
+        
+        return x
