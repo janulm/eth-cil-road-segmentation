@@ -341,3 +341,33 @@ class SAM_Encoder_Custom_Decoder(nn.Module):
         x = self.sam_encoder(x)
         x = self.decoder(x)
         return x
+    
+
+class EnsembleMLP(nn.Module):
+
+    def __init__(self, input_dim, p_dropout = 0.2):
+        super().__init__()
+        self.input_dim = input_dim
+
+        self.dropout1 = nn.Dropout(p=p_dropout)
+        self.dropout2 = nn.Dropout(p=p_dropout)
+
+        self.fc1 = nn.Linear(input_dim, 64)
+        self.fc2 = nn.Linear(64, 64)
+        self.fc3 = nn.Linear(64, 1)
+
+        self.lrelu = nn.LeakyReLU()
+
+    def forward(self, x):
+        # assume input is of shape: 
+        # (batch_size,1024,1024,input_dim) and contains numbers between 0 and 1 (they have been feed trough a sigmoid)
+        
+        x = self.fc1(x)
+        x = self.lrelu(x)
+        x = self.dropout1(x)
+
+        x = self.fc2(x)
+        x = self.lrelu(x)
+        x = self.dropout2(x)
+
+        x = self.fc3(x)
