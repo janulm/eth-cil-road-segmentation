@@ -58,19 +58,22 @@ def show_image(rgb_array):
     plt.imshow(rgb_array)
     plt.show()
 
-def get_street_ratio_mmm(mask_list):
+def get_street_ratio_mmm(mask_list,min_ratio_threshold=0.00):
     # expects a list of gt masks:
     # returns ratio of how much of the mask is street
     # returns min, mean and max ratio. 
     r_min = 1.
     r_max = 0.
     r_mean = 0.
+    counter = 0
     for mask in mask_list:
         ratio = mask.mean() / 255.
-        r_max = max(r_max, ratio)
-        r_min = min(r_min, ratio)
-        r_mean += ratio
-    r_mean = r_mean / len(mask_list)
+        if ratio >= min_ratio_threshold:
+            r_max = max(r_max, ratio)
+            r_min = min(r_min, ratio)
+            r_mean += ratio
+            counter +=1 
+    r_mean = r_mean / counter
     return r_min, r_mean, r_max
 
 def get_street_ratio_distr(mask_list):

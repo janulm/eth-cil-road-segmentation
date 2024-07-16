@@ -3,7 +3,7 @@
 import torch
 from torch import nn
 
-# taken from common.py in segment anythign facebook library 
+# taken from common.py in segment anything facebook library 
 class LayerNorm2d(nn.Module): 
     def __init__(self, num_channels: int, eps: float = 1e-6) -> None:
         super().__init__()
@@ -29,6 +29,9 @@ Excecpted output of the decoder is 1024x1024x3
 
 """
 class Conv_Decoder(nn.Module):
+
+    # Source: https://www.kaggle.com/code/yogendrayatnalkar/promptless-taskspecific-finetuning-of-metaai-sam
+
     def __init__(self, p_dropout = 0.2):
         super().__init__()
         self._dropout1 = nn.Dropout(p=p_dropout)
@@ -70,10 +73,7 @@ class Conv_Decoder(nn.Module):
 class MLP_Decoder(nn.Module):
 
     # the input shape is: 
-
     # ([1, 256, 64, 64])
-
-
     # 1024 / 16 = 64
     # hence each of the 16x16 patches is now represented as a 256 dimensional vector, 
     # there are 64x64 of these patches: 
@@ -142,10 +142,7 @@ class MLP_Decoder(nn.Module):
 class Skip_MLP_Decoder(nn.Module):
 
     # the input shape is: 
-
-    # ([1, 256, 64, 64]), ... TODO HERE IS THE INTERMEDIATE OUTPUTS...
-
-
+    # ([1, 256, 64, 64])
     # 1024 / 16 = 64
     # hence each of the 16x16 patches is now represented as a 256 dimensional vector, 
     # there are 64x64 of these patches: 
@@ -220,7 +217,6 @@ class Skip_MLP_Decoder(nn.Module):
 
 class MLP_Decoder_Spatially_Aware(nn.Module):
     # if option = 1, we use the 8 spatially aware patches, if option = 0 we use 4 spatially aware patches
-
     # the input shape is: 
     # ([1, 256, 64, 64])
     # 1024 / 16 = 64
