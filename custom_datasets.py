@@ -106,6 +106,7 @@ class Sat_Mask_Dataset(Dataset):
 
         image, mask = self.transform(image, mask)
         image = image * 255.
+        mask = mask[0].unsqueeze(0)
         return image, mask
     
 
