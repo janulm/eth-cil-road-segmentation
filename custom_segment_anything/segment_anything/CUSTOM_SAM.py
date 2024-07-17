@@ -325,7 +325,7 @@ class SAM_Encoder_Custom_Decoder(nn.Module):
         for layer_number, param in enumerate(self.sam_encoder.parameters()):
             param.requires_grad = False
             last_layer_numb = layer_number
-        print(f"Last layer number: {last_layer_numb}")
+        #print(f"Last layer number: {last_layer_numb}")
 
         # Unfreeze last layers of the encoder
         for layer_number, param in enumerate(self.sam_encoder.parameters()):
@@ -335,7 +335,7 @@ class SAM_Encoder_Custom_Decoder(nn.Module):
             # Unfreeze first layers of the encoder
             if layer_number < encoder_finetune_num_first_layers:
                 param.requires_grad = True
-                    
+
         # Unfreeze neck of the encoder
         self.sam_encoder.neck.requires_grad = True
         self.decoder = decoder
