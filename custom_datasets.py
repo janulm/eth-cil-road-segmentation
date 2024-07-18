@@ -16,7 +16,7 @@ import torchvision.transforms.functional as TF
 import numpy as np
 
 class CustomTransform:
-    def __init__(self,img_size=1024,do_random=False,handle_mask=True):
+    def __init__(self,img_size=416,do_random=False,handle_mask=True):
         self.img_size = img_size
         self.do_random = do_random
         self.handle_mask = handle_mask
@@ -105,13 +105,13 @@ class Sat_Mask_Dataset(Dataset):
         mask = self.street_masks[idx] / 255  # normalize mask
 
         image, mask = self.transform(image, mask)
-        image = image * 255. 
-        mask = mask[0].unsqueeze(0) 
+        image = image * 255.
+        mask = mask[0].unsqueeze(0)
         return image, mask
     
 
 class Sat_Mask_Dataset_UPP_preprocessed(Dataset):
-    def __init__(self, satellite_images, street_masks, min_street_ratio=0.0, max_street_ratio=1.0, img_size=224, do_random=True, upp_preprocess=None):
+    def __init__(self, satellite_images, street_masks, min_street_ratio=0.0, max_street_ratio=1.0, img_size=416, do_random=True, upp_preprocess=None):
         assert len(satellite_images) == len(street_masks), "Number of images and masks should be the same"
         self.satellite_images = []
         self.street_masks = []
@@ -136,10 +136,10 @@ class Sat_Mask_Dataset_UPP_preprocessed(Dataset):
         mask = self.street_masks[idx] / 255
 
         image, mask = self.transform(image, mask)
-        preprocessed = self.upp_preprocess(image=image.numpy().transpose(1, 2, 0), mask=mask.numpy().transpose(1, 2, 0))
+        image = image * 255.
+        preprocessed = self.upp_preprocess(image=image.numpy().transpose(1, 2, 0))
         image = preprocessed["image"].type(torch.float32)
-        mask = preprocessed["mask"].type(torch.float32)
-        mask = transforms.ToTensor()(transforms.ToPILImage()(mask.permute(2, 0, 1)).convert('L'))
+        mask = mask.type(torch.float32)[0].unsqueeze(0)
         return image, mask
 
 
@@ -163,7 +163,7 @@ class Sat_Only_Image_Dataset(Dataset):
 
 # use this class for just for the kaggle test images, since there are no masks available for this dataset: 
 class Sat_Only_Image_UPP_preprocessed(Dataset):
-    def __init__(self, satellite_images, img_size=224,  upp_preprocess=None):
+    def __init__(self, satellite_images, img_size=416,  upp_preprocess=None):
         self.satellite_images = satellite_images
         self.transform = CustomTransform(img_size=img_size, do_random=False, handle_mask=False)
         self.upp_preprocess = upp_preprocess
