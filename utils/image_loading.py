@@ -2,6 +2,14 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 import os
+import re
+
+
+#utitlity function for sorting image names
+def extract_number(image_name):
+    match = re.search(r'(\d+)', image_name)
+    return int(match.group(0)) if match else 0
+
 
 
 # Utility function that takes a set of png images and converts them to arrays of RGB values
@@ -11,7 +19,9 @@ def load_images(image_folder):
 
     images_names = os.listdir(folder_path)
     # sort them
-    images_names.sort()
+    #images_names.sort()
+    # Sort image names based on the extracted numerical value
+    images_names.sort(key=extract_number)
 
     for file_name in images_names:
         if file_name.endswith('.png'):
