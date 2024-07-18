@@ -316,28 +316,11 @@ class MLP_Decoder_Spatially_Aware(nn.Module):
     
 
 class SAM_Encoder_Custom_Decoder(nn.Module):
-    def __init__(self, sam_preprocess, sam_encoder, decoder, encoder_finetune_num_last_layers=5,encoder_finetune_num_first_layers=0):
+    def __init__(self, sam_preprocess, sam_encoder, decoder):
         super().__init__()
         self.sam_preprocess = sam_preprocess
         self.sam_encoder = sam_encoder
     
-        last_layer_numb = 0
-        for layer_number, param in enumerate(self.sam_encoder.parameters()):
-            param.requires_grad = False
-            last_layer_numb = layer_number
-        #print(f"Last layer number: {last_layer_numb}")
-
-        # Unfreeze last layers of the encoder
-        for layer_number, param in enumerate(self.sam_encoder.parameters()):
-            if layer_number > last_layer_numb - encoder_finetune_num_last_layers:
-                param.requires_grad = True
-
-            # Unfreeze first layers of the encoder
-            if layer_number < encoder_finetune_num_first_layers:
-                param.requires_grad = True
-
-        # Unfreeze neck of the encoder
-        self.sam_encoder.neck.requires_grad = True
         self.decoder = decoder
 
     def forward(self, x):
