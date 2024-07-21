@@ -3,73 +3,42 @@
 import torch
 from torch import nn
 
-# taken from common.py in segment anything facebook library 
-class LayerNorm2d(nn.Module): 
-    def __init__(self, num_channels: int, eps: float = 1e-6) -> None:
-        super().__init__()
-        self.weight = nn.Parameter(torch.ones(num_channels))
-        self.bias = nn.Parameter(torch.zeros(num_channels))
-        self.eps = eps
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        u = x.mean(1, keepdim=True)
-        s = (x - u).pow(2).mean(1, keepdim=True)
-        x = (x - u) / torch.sqrt(s + self.eps)
-        x = self.weight[:, None, None] * x + self.bias[:, None, None]
-        return x
-    
-
-
-"""
-We test different versions of decoders: 
-
-Size of output of image encoder is 256x64x64
-
-Excecpted output of the decoder is 1024x1024x3
-
-"""
 class Conv_Decoder(nn.Module):
 
     # Source: https://www.kaggle.com/code/yogendrayatnalkar/promptless-taskspecific-finetuning-of-metaai-sam
 
     def __init__(self, p_dropout = 0.2):
         super().__init__()
-        self._dropout1 = nn.Dropout(p=p_dropout)
-        self._dropout2 = nn.Dropout(p=p_dropout)
-        self._l_norm1 = LayerNorm2d(128)
-        self._l_norm2 = LayerNorm2d(64)
-        self._l_norm3 = LayerNorm2d(32)
-        self._l_norm4 = LayerNorm2d(16)
-        self._conv1 = nn.ConvTranspose2d(256, 128, kernel_size=2,stride=2, padding=0)
-        self._conv2 = nn.ConvTranspose2d(128, 64, kernel_size=2,stride=2, padding=0)
-        self._conv3 = nn.ConvTranspose2d(64, 32, kernel_size=2,stride=2, padding=0)
-        self._conv4 = nn.ConvTranspose2d(32, 16, kernel_size=2,stride=2, padding=0)
-        self._conv5 = nn.ConvTranspose2d(16, 1, kernel_size=1,stride=1, padding=0)
+        self.dropout1 = nn.Dropout(p=p_dropout)
+        self.dropout2 = nn.Dropout(p=p_dropout)
 
-        self.decoder = nn.Sequential(
-            self._conv1,
-            self._l_norm1,
-            nn.ReLU(),
-            self._dropout1,
-            self._conv2,
-            self._l_norm2,
-            nn.ReLU(),
-            self._conv3,
-            self._l_norm3,
-            nn.ReLU(),
-            self._dropout2,
-            self._conv4,
-            self._l_norm4,
-            nn.ReLU(),
-            self._conv5
-            #, removed for numerical stability reasons 
-            #nn.Sigmoid()
-        )
+        self.conv1 = nn.ConvTranspose2d(256, 128, kernel_size=2,stride=2, padding=0)
+        self.conv2 = nn.ConvTranspose2d(128, 64, kernel_size=2,stride=2, padding=0)
+        self.conv3 = nn.ConvTranspose2d(64, 32, kernel_size=2,stride=2, padding=0)
+        self.conv4 = nn.ConvTranspose2d(32, 16, kernel_size=2,stride=2, padding=0)
+        self.conv5 = nn.ConvTranspose2d(16, 1, kernel_size=1,stride=1, padding=0)
 
+        self.lrelu = nn.ReLU()
+        
     def forward(self, x):
-        return self.decoder(x)
+        #return self.decoder(x)
+        x = self.conv1(x)
+        x = self.lrelu(x)
+        x = self.dropout1(x)
+        
+        x = self.conv2(x)
+        x = self.lrelu(x)
+        
+        x = self.conv3(x)
+        x = self.lrelu(x)
+        x = self.dropout2(x)
+        
+        x = self.conv4(x)
+        x = self.lrelu(x)
+        x = self.conv5(x)
+        return x
     
-
 class MLP_Decoder(nn.Module):
 
     # the input shape is: 
