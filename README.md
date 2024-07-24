@@ -16,11 +16,13 @@
 
 ## Project Description
 
-The project is based on the Kaggle competition "Road Segmentation" (https://www.kaggle.com/competitions/ethz-cil-road-segmentation-2024). The dataset consists of 144 satellite images of size 400x400 pixels, with corresponding ground truth labels. The goal is to predict the road segmentation of the images. For evaluation the images are split into 16x16 patches and F1-Score is reported.
+The project is based on the Kaggle competition "Road Segmentation" (https://www.kaggle.com/competitions/ethz-cil-road-segmentation-2024). The dataset consists of 144 satellite images of size 400x400 pixels, with corresponding ground truth labels. We expand the dataset with 12k further images and masks using the Google Maps API. The goal is to predict the road segmentation of the images. For evaluation the images are split into 16x16 patches and F1-Score is reported. 
+
+We extend ideas and models from cutting-edge vision transformers to present BiSeSAM - an efficient and novel road segmentation model. BiSeSAM embeds and extracts the generalized power of Meta's Segment Anything (SAM) image encoder in a custom architecture, with several plug-in decoders. Trained with our manually generated dataset, BiSeSAM achieves on-par performance with state-of-the-art models, and out-performs them in some configurations. 
 
 We ranked first in the overall kaggle competition. Please check out our [report](BiSeSAM.pdf) for more details on our approach and BiSeSAM.
 
-Here is a sample prediction of our final model on the test set:
+Here is a sample prediction of our MLP-BiSeSAM on the test set:
 ![sample_prediction](qualitative_example.png)
 
 
@@ -32,8 +34,8 @@ If you want to run the code, please follow the instructions below. First one nee
 Note that this requires a machine with CUDA support, since some code makes use of CUDA proprieatry optimizations such as TF32 and torch.compile(). 
 
 ```bash
-conda env create -f env.yml
-conda activate cil
+conda env create -f cuda_environment.yml
+conda activate cil-road
 ```
 
 2. Downloading SAM checkpoints
