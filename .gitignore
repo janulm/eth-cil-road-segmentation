@@ -12,3 +12,6 @@ __pycache__/
 raw/
 cache/
 test.ipynb
+
+
+!qualitative_example.png
