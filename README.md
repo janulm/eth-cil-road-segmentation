@@ -24,7 +24,7 @@ We ranked first in the overall kaggle competition. Please check out our [report]
 
 Here is a sample prediction of our MLP-BiSeSAM on the test set:
 ![sample_prediction](qualitative_example.png)
-
+![few_samples](few_example_image_mask.png)
 
 ## Running the Experiments 
 
