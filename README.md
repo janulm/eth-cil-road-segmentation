@@ -7,7 +7,7 @@
   - [Team](#team)
   - [Project Description](#project-description)
   - [Running the Experiments](#running-the-experiments)
-  - [More Examples] (#more-examples) 
+  - [More Examples](#more-examples) 
 ## Team 
 -  **Jannek Ulm** (https://github.com/janulm)
 -  **Douglas Orisini-Rosenberg** 
