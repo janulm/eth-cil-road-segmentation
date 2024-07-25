@@ -7,7 +7,7 @@
   - [Team](#team)
   - [Project Description](#project-description)
   - [Running the Experiments](#running-the-experiments)
-
+  - [More Examples](#more-examples) 
 ## Team 
 -  **Jannek Ulm** (https://github.com/janulm)
 -  **Douglas Orisini-Rosenberg** 
@@ -24,7 +24,6 @@ We ranked first in the overall kaggle competition. Please check out our [report]
 
 Here is a sample prediction of our MLP-BiSeSAM on the test set:
 ![sample_prediction](qualitative_example.png)
-
 
 ## Running the Experiments 
 
@@ -47,6 +46,10 @@ Furthermore, the SAM model checkpoints need to be downloaded from the following 
    1. To train the BiSeSAM model and generate the submissions, please run the jupyter notebook [train_bisesam.ipynb](train_bisesam.ipynb). This will train the model and save the best model checkpoint in the [checkpoints](custom_segment_anything/model_checkpoints/finetuned/) folder.    
    2. To train the Unet, Unet++ baseline models and generate their submissions, please run the jupyter notebook [train_baseline.ipynb](train_baseline.ipynb).
 
+
+## More Examples
+
+![few_samples](few_examples_image_mask.png)
 
 
 
