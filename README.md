@@ -7,7 +7,8 @@
   - [Team](#team)
   - [Project Description](#project-description)
   - [Running the Experiments](#running-the-experiments)
-  - [More Examples](#more-examples) 
+  - [Final Submission](#final-submission)
+  - [More Examples](#more-examples)
 ## Team 
 -  **Jannek Ulm** (https://github.com/janulm)
 -  **Douglas Orisini-Rosenberg** 
@@ -46,6 +47,12 @@ Furthermore, the SAM model checkpoints need to be downloaded from the following 
    1. To train the BiSeSAM model and generate the submissions, please run the jupyter notebook [train_bisesam.ipynb](train_bisesam.ipynb). This will train the model and save the best model checkpoint in the [checkpoints](custom_segment_anything/model_checkpoints/finetuned/) folder.    
    2. To train the Unet, Unet++ baseline models and generate their submissions, please run the jupyter notebook [train_baseline.ipynb](train_baseline.ipynb).
 
+
+## Final Submission
+
+(Note that this section requires that each of the previous steps have been run successfully, to generate the intermediate submissions of each model)
+
+To generate our best scoring and final kaggle submission, please run the jupyter notebook [final_submission.ipynb](final_submission.ipynb). This will generate the submission file `majority_vote_ensemble_all_models.csv` in the root directory.
 
 ## More Examples
 
