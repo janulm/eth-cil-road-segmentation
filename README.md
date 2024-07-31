@@ -41,7 +41,7 @@ conda activate cil-road
 2. Downloading SAM checkpoints
 Furthermore, the SAM model checkpoints need to be downloaded from the following link: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth and saved in the [checkpoints](custom_segment_anything/model_checkpoints) folder.
 
-3. Downloading the google maps data, by simply running the jupyter notebook [generate_data.ipynb](data/generate_data.ipynb). This will download the satellite images and their corresponding masks and save it in the `data` folder. Please note that a (free) google maps API key is required for this step.
+3. Downloading the google maps data, by simply running the jupyter notebook [generate_data.ipynb](data/generate_data.ipynb). This will download the satellite images and their corresponding masks and save it in the `data` folder. Please note that a (free) google maps API key is required for this step. Furthermore it is also necessary to download the [original dataset](https://www.kaggle.com/competitions/ethz-cil-road-segmentation-2024/data) from the kaggle competition page and save it in the `data\original` folder.
 
 4. Running the experiments:
    1. To train the BiSeSAM model and generate the submissions, please run the jupyter notebook [train_bisesam.ipynb](train_bisesam.ipynb). This will train the model and save the best model checkpoint in the [checkpoints](custom_segment_anything/model_checkpoints/finetuned/) folder.    
