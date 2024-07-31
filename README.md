@@ -41,9 +41,9 @@ conda activate cil-road
 2. Downloading SAM checkpoints
 Furthermore, the SAM model checkpoints need to be downloaded from the following link: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth and saved in the [checkpoints](custom_segment_anything/model_checkpoints) folder.
 
-1. Downloading the google maps data, by simply running the jupyter notebook [generate_data.ipynb](data/generate_data.ipynb). This will download the satellite images and their corresponding masks and save it in the `data` folder.
+3. Downloading the google maps data, by simply running the jupyter notebook [generate_data.ipynb](data/generate_data.ipynb). This will download the satellite images and their corresponding masks and save it in the `data` folder. Please note that a (free) google maps API key is required for this step.
 
-2. Running the experiments:
+4. Running the experiments:
    1. To train the BiSeSAM model and generate the submissions, please run the jupyter notebook [train_bisesam.ipynb](train_bisesam.ipynb). This will train the model and save the best model checkpoint in the [checkpoints](custom_segment_anything/model_checkpoints/finetuned/) folder.    
    2. To train the Unet, Unet++ baseline models and generate their submissions, please run the jupyter notebook [train_baseline.ipynb](train_baseline.ipynb).
 
