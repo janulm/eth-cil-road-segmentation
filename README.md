@@ -11,7 +11,7 @@
   - [More Examples](#more-examples)
 ## Team 
 -  **Jannek Ulm** (https://github.com/janulm)
--  **Douglas Orisini-Rosenberg** 
+-  **Douglas Orisini-Rosenberg** (https://github.com/duxirosenberg)
 - **Raoul van Doren** 
 - **Paul Ellsiepen**
 
