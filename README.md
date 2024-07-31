@@ -13,7 +13,7 @@
 -  **Jannek Ulm** (https://github.com/janulm)
 -  **Douglas Orisini-Rosenberg** (https://github.com/duxirosenberg)
 - **Raoul van Doren** 
-- **Paul Ellsiepen**
+- **Paul Ellsiepen** (https://github.com/paulellsiepen)
 
 ## Project Description
 
