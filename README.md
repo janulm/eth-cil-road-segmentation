@@ -12,7 +12,7 @@
 ## Team 
 -  **Jannek Ulm** (https://github.com/janulm)
 -  **Douglas Orisini-Rosenberg** (https://github.com/duxirosenberg)
-- **Raoul van Doren** 
+- **Raoul van Doren** (https://github.com/rvandoren)
 - **Paul Ellsiepen** (https://github.com/paulellsiepen)
 
 ## Project Description
